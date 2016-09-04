@@ -23,7 +23,7 @@ my @releases = map {
 } @{$cpan->get};
 
 if ($latest) {
-    my $cmp = sub {
+    my $numify = sub {
         my $name = shift;
         if (my ($v1, $v2) = $name =~ /^5\.(\d+)\.(\d+)$/) {
             if ($v1 % 2 == 0) {
@@ -36,7 +36,7 @@ if ($latest) {
     my ($latest) =
         map  { $_->[0] }
         sort { $b->[1] <=> $a->[1] }
-        map  { my $c = $cmp->($_->{name}); $c ? [$_, $c] : () }
+        map  { my $n = $numify->($_->{name}); $n ? [$_, $n] : () }
         @releases;
     print "$latest->{name}\t$latest->{url}\n";
 } else {
