@@ -13,6 +13,9 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => 0
   },
   "DISTNAME" => "CPAN-Perl-Releases-MetaCPAN",
+  "EXE_FILES" => [
+    "script/perl-release"
+  ],
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.008005",
   "NAME" => "CPAN::Perl::Releases::MetaCPAN",

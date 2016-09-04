@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use CPAN::Perl::Releases::MetaCPAN;
+
+my $latest;
+if (my $arg = shift) {
+    if ($arg eq "latest") {
+        $latest++;
+    } elsif ($arg =~ /^(-h|--help)$/) {
+        die "Usage: $0 [latest]\n";
+    } else {
+        die "Unknown argument '$arg'\n";
+    }
+}
+
+my $cpan = CPAN::Perl::Releases::MetaCPAN->new;
+my @releases = map {
+    my $name = $_->{name};
+    $name =~ s/^perl-?//;
+    my $url = $_->{download_url};
+    { name => $name, url => $url };
+} @{$cpan->get};
+
+if ($latest) {
+    my $cmp = sub {
+        my $name = shift;
+        if (my ($v1, $v2) = $name =~ /^5\.(\d+)\.(\d+)$/) {
+            if ($v1 % 2 == 0) {
+                return 0+sprintf "%03d%03d", $v1, $v2;
+            }
+        }
+        return;
+    };
+
+    my ($latest) =
+        map  { $_->[0] }
+        sort { $b->[1] <=> $a->[1] }
+        map  { my $c = $cmp->($_->{name}); $c ? [$_, $c] : () }
+        @releases;
+    print "$latest->{name}\t$latest->{url}\n";
+} else {
+    for my $r (@releases) {
+        print "$r->{name}\t$r->{url}\n";
+    }
+}

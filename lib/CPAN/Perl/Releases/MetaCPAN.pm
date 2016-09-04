@@ -67,7 +67,7 @@ sub perl_tarballs {
             $url =~ /\.(tar\.\S+)$/;
             ($1 => $url);
         }
-        grep { my $name = $_->{name}; $name =~ s/^perl-//; $name eq $arg }
+        grep { my $name = $_->{name}; $name =~ s/^perl-?//; $name eq $arg }
         grep { $_->{status} eq "cpan" }
         @$releases;
     \%tarballs;
@@ -77,7 +77,7 @@ sub perl_versions {
     my ($self) = _self @_;
     my $releases = $self->get;
     my @versions =
-        map { my $name = $_->{name}; $name =~ s/^perl-//; $name }
+        map { my $name = $_->{name}; $name =~ s/^perl-?//; $name }
         grep { $_->{status} eq "cpan" }
         @$releases;
     @versions;
