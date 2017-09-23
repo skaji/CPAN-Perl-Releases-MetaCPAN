@@ -70,7 +70,7 @@ sub perl_tarballs {
             }
         }
         grep { my $name = $_->{name}; $name =~ s/^perl-?//; $name eq $arg }
-        grep { $_->{status} eq "cpan" }
+        grep { $_->{status} =~ /^(?:cpan|latest)$/ }
         @$releases;
     \%tarballs;
 }
@@ -80,7 +80,7 @@ sub perl_versions {
     my $releases = $self->get;
     my @versions =
         map { my $name = $_->{name}; $name =~ s/^perl-?//; $name }
-        grep { $_->{status} eq "cpan" }
+        grep { $_->{status} =~ /^(?:cpan|latest)$/ }
         @$releases;
     @versions;
 }
@@ -90,7 +90,7 @@ sub perl_pumpkins {
     my $releases = $self->get;
     my %author =
         map { $_->{author} => 1 }
-        grep { $_->{status} eq "cpan" }
+        grep { $_->{status} =~ /^(?:cpan|latest)$/ }
         @$releases;
     sort keys %author;
 }
