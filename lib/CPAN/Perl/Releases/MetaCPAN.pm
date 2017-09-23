@@ -8,7 +8,7 @@ use HTTP::Tinyish;
 use HTTP::Tiny;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(perl_tarballs perl_versions perl_pumbkins);
+our @EXPORT_OK = qw(perl_tarballs perl_versions perl_pumpkins);
 
 sub new {
     my ($class, %option) = @_;
