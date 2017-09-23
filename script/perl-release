@@ -72,7 +72,7 @@ perl-release - show perl tarball urls
     ...
 
     # show specific version
-    ❯ perl-release 5.14.2
+    > perl-release 5.14.2
     https://cpan.metacpan.org/authors/id/F/FL/FLORA/perl-5.14.2.tar.bz2
 
     # show latest
