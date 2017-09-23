@@ -23,11 +23,15 @@ CPAN::Perl::Releases::MetaCPAN - Mapping Perl releases on CPAN to the location o
 # DESCRIPTION
 
 CPAN::Perl::Releases::MetaCPAN is just like [CPAN::Perl::Releases](https://metacpan.org/pod/CPAN::Perl::Releases),
-but it gets the release information via MetaCPAN API.
+but it gets the release information via MetaCPAN API `https://fastapi.metacpan.org/v1/release`.
 
-In fact, it gets the release information from
+# SEE ALSO
 
-[http://api.metacpan.org/v0/release/\_search?source=%7B%22sort%22%3A%5B%7B%22date%22%3A%22desc%22%7D%5D%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22match\_all%22%3A%7B%7D%7D%2C%22filter%22%3A%7B%22term%22%3A%7B%22distribution%22%3A%22perl%22%7D%7D%7D%7D%2C%22size%22%3A250%2C%22fields%22%3A%5B%22name%22%2C%22date%22%2C%22author%22%2C%22version%22%2C%22status%22%2C%22authorized%22%2C%22download\_url%22%5D%7D](http://api.metacpan.org/v0/release/_search?source=%7B%22sort%22%3A%5B%7B%22date%22%3A%22desc%22%7D%5D%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22match_all%22%3A%7B%7D%7D%2C%22filter%22%3A%7B%22term%22%3A%7B%22distribution%22%3A%22perl%22%7D%7D%7D%7D%2C%22size%22%3A250%2C%22fields%22%3A%5B%22name%22%2C%22date%22%2C%22author%22%2C%22version%22%2C%22status%22%2C%22authorized%22%2C%22download_url%22%5D%7D)
+[CPAN::Perl::Releases](https://metacpan.org/pod/CPAN::Perl::Releases)
+
+[metacpan-api](https://github.com/metacpan/metacpan-api)
+
+[metacpan-web](https://github.com/metacpan/metacpan-web)
 
 # AUTHOR
 

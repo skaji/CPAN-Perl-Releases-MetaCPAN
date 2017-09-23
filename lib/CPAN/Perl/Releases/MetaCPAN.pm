@@ -3,58 +3,57 @@ use strict;
 use warnings;
 
 our $VERSION = '0.001';
-use HTTP::Tinyish;
 use JSON::PP ();
+use HTTP::Tinyish;
 
 use Exporter 'import';
 our @EXPORT_OK = qw(perl_tarballs perl_versions perl_pumbkins);
 
 sub new {
-    my ($class, $uri) = @_;
-    $uri ||= "http://api.metacpan.org/v0";
+    my ($class, %option) = @_;
+    my $uri = $option{uri} || "https://fastapi.metacpan.org/v1/release";
     $uri =~ s{/$}{};
-    bless { uri => $uri, _cache => undef }, $class;
+    my $cache = exists $option{cache} ? $option{cache} : 1;
+    my $http = HTTP::Tinyish->new(agent => __PACKAGE__ . "/$VERSION");
+    bless { uri => $uri, http => $http, cache => $cache }, $class;
 }
 
 sub get {
     my $self = shift;
-    return $self->{_cache} if $self->{_cache};
+    return $self->{_releases} if $self->{cache} and $self->{_releases};
 
-    my $uri = "$self->{uri}/release/_search?source=";
-    my $dist = "perl";
-    # copy from https://github.com/metacpan/metacpan-web/blob/master/lib/MetaCPAN/Web/Model/API/Release.pm
+    my $uri = "$self->{uri}/_search";
+    # copy from
+    # https://github.com/metacpan/metacpan-web/blob/master/lib/MetaCPAN/Web/Model/API/Release.pm
+    # https://github.com/metacpan/metacpan-api/blob/master/lib/MetaCPAN/Document/Release/Set.pm
     my $query = {
         query => {
-            filtered => {
-                query  => { match_all => {} },
-                filter => { term => { distribution => $dist } }
-            }
+            bool => {
+                must => [
+                    { term => { distribution => "perl" } },
+                ],
+            },
         },
-        size => 250,
+        size => 500,
         sort => [ { date => 'desc' } ],
-        fields => [qw( name date author version status authorized download_url )],
+        fields => [qw( name date author version status maturity authorized download_url )],
     };
-    $uri .= $self->_encode_json($query);
-    my $res = HTTP::Tinyish->new->get($uri);
-    die "Failed to get $uri: $res->{status} $res->{reason}\n" unless $res->{success};
-    my $hash = JSON::PP->new->decode($res->{content});
-    $self->{_cache} = [
-        grep { ($_->{authorized} || "") eq "true" }
+    my $res = $self->{http}->post($uri, { content => JSON::PP::encode_json($query) });
+    die "$res->{status} $res->{reason}, $uri\n" unless $res->{success};
+    my $hash = JSON::PP::decode_json($res->{content});
+    my $releases = [
+        map { $_->{authorized} = 1; $_ }
+        grep { $_->{authorized} }
         map { $_->{fields} }
         @{$hash->{hits}{hits}}
     ];
-}
-
-sub _encode_json {
-    (undef, my $data) = @_;
-    my $json = JSON::PP->new->canonical(1)->encode($data);
-    $json =~ s/([^a-zA-Z0-9_\-.])/uc sprintf("%%%02x",ord($1))/eg;
-    $json;
+    $self->{_releases} = $releases if $self->{cache};
+    $releases;
 }
 
 sub _self {
     my $self = eval { $_[0]->isa(__PACKAGE__) } ? shift : __PACKAGE__->new;
-    ($self, @_);
+    wantarray ? ($self, @_) : $self;
 }
 
 sub perl_tarballs {
@@ -64,8 +63,11 @@ sub perl_tarballs {
         map {
             my $url = $_->{download_url};
             $url =~ s{.*authors/id/}{};
-            $url =~ /\.(tar\.\S+)$/;
-            ($1 => $url);
+            if ($url =~ /\.(tar\.\S+)$/) {
+                ($1, $url);
+            } else {
+                ();
+            }
         }
         grep { my $name = $_->{name}; $name =~ s/^perl-?//; $name eq $arg }
         grep { $_->{status} eq "cpan" }
@@ -74,7 +76,7 @@ sub perl_tarballs {
 }
 
 sub perl_versions {
-    my ($self) = _self @_;
+    my $self = _self @_;
     my $releases = $self->get;
     my @versions =
         map { my $name = $_->{name}; $name =~ s/^perl-?//; $name }
@@ -84,7 +86,7 @@ sub perl_versions {
 }
 
 sub perl_pumpkins {
-    my ($self) = _self @_;
+    my $self = _self @_;
     my $releases = $self->get;
     my %author =
         map { $_->{author} => 1 }
@@ -121,11 +123,15 @@ CPAN::Perl::Releases::MetaCPAN - Mapping Perl releases on CPAN to the location o
 =head1 DESCRIPTION
 
 CPAN::Perl::Releases::MetaCPAN is just like L<CPAN::Perl::Releases>,
-but it gets the release information via MetaCPAN API.
+but it gets the release information via MetaCPAN API C<https://fastapi.metacpan.org/v1/release>.
 
-In fact, it gets the release information from
+=head1 SEE ALSO
 
-L<http://api.metacpan.org/v0/release/_search?source=%7B%22sort%22%3A%5B%7B%22date%22%3A%22desc%22%7D%5D%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22match_all%22%3A%7B%7D%7D%2C%22filter%22%3A%7B%22term%22%3A%7B%22distribution%22%3A%22perl%22%7D%7D%7D%7D%2C%22size%22%3A250%2C%22fields%22%3A%5B%22name%22%2C%22date%22%2C%22author%22%2C%22version%22%2C%22status%22%2C%22authorized%22%2C%22download_url%22%5D%7D|http://api.metacpan.org/v0/release/_search?source=%7B%22sort%22%3A%5B%7B%22date%22%3A%22desc%22%7D%5D%2C%22query%22%3A%7B%22filtered%22%3A%7B%22query%22%3A%7B%22match_all%22%3A%7B%7D%7D%2C%22filter%22%3A%7B%22term%22%3A%7B%22distribution%22%3A%22perl%22%7D%7D%7D%7D%2C%22size%22%3A250%2C%22fields%22%3A%5B%22name%22%2C%22date%22%2C%22author%22%2C%22version%22%2C%22status%22%2C%22authorized%22%2C%22download_url%22%5D%7D>
+L<CPAN::Perl::Releases>
+
+L<metacpan-api|https://github.com/metacpan/metacpan-api>
+
+L<metacpan-web|https://github.com/metacpan/metacpan-web>
 
 =head1 AUTHOR
 
