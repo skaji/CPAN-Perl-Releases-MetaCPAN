@@ -5,7 +5,6 @@ use warnings;
 our $VERSION = '0.003';
 use JSON::PP ();
 use HTTP::Tinyish;
-use HTTP::Tiny;
 
 use Exporter 'import';
 our @EXPORT_OK = qw(perl_tarballs perl_versions perl_pumpkins);
@@ -15,8 +14,7 @@ sub new {
     my $uri = $option{uri} || "https://fastapi.metacpan.org/v1/release";
     $uri =~ s{/$}{};
     my $cache = exists $option{cache} ? $option{cache} : 1;
-    my $http_class = HTTP::Tiny->can_ssl ? "HTTP::Tiny" : "HTTP::Tinyish";
-    my $http = $http_class->new(agent => __PACKAGE__ . "/$VERSION");
+    my $http = HTTP::Tinyish->new(agent => __PACKAGE__ . "/$VERSION");
     bless { uri => $uri, http => $http, cache => $cache }, $class;
 }
 
