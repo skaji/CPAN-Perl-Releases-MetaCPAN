@@ -15,7 +15,8 @@ sub new {
     $uri =~ s{/$}{};
     my $cache = exists $option{cache} ? $option{cache} : 1;
     my $http = HTTP::Tinyish->new(agent => __PACKAGE__ . "/$VERSION");
-    bless { uri => $uri, http => $http, cache => $cache }, $class;
+    my $json = JSON::PP->new->canonical(1);
+    bless { uri => $uri, http => $http, cache => $cache, json => $json }, $class;
 }
 
 sub get {
@@ -38,9 +39,14 @@ sub get {
         sort => [ { date => 'desc' } ],
         fields => [qw( name date author version status maturity authorized download_url )],
     };
-    my $res = $self->{http}->post($uri, { content => JSON::PP::encode_json($query) });
+    my $res = $self->{http}->post($uri, {
+        content => $self->{json}->encode($query),
+        headers => {
+            'content-type' => 'application/json',
+        }
+    });
     die "$res->{status} $res->{reason}, $uri\n" unless $res->{success};
-    my $hash = JSON::PP::decode_json($res->{content});
+    my $hash = $self->{json}->decode($res->{content});
     my $releases = [
         map { $_->{authorized} = 1; $_ }
         grep { $_->{authorized} }
