@@ -11,7 +11,6 @@ my ($one) = grep { $_->{name} eq "perl5.005_62" }  @$releases;
 
 is_deeply $one, {
     'author' => 'GSAR',
-    'authorized' => 1,
     'date' => '1999-10-15T10:36:17',
     'download_url' => 'https://cpan.metacpan.org/authors/id/G/GS/GSAR/perl5.005_62.tar.gz',
     'name' => 'perl5.005_62',
