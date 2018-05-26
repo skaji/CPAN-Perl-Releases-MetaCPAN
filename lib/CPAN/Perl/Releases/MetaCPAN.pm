@@ -48,7 +48,12 @@ sub get {
             content => $self->{json}->encode($query),
             headers => { 'content-type' => 'application/json' },
         });
-        die "$res->{status} $res->{reason}, $uri\n" unless $res->{success};
+        if (!$res->{success}) {
+            my $message = $res->{status} == 599 ? ", $res->{content}" : "";
+            chomp $message;
+            $message =~ s/\n/ /g;
+            die "$res->{status} $res->{reason}, $uri$message\n";
+        }
         my $hash = $self->{json}->decode($res->{content});
         $total = $hash->{hits}{total} unless defined $total;
         push @release, map { $_->{fields} } @{$hash->{hits}{hits}};
