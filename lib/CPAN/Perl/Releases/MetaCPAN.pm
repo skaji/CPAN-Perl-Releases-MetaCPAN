@@ -2,7 +2,7 @@ package CPAN::Perl::Releases::MetaCPAN;
 use strict;
 use warnings;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 use JSON::PP ();
 use HTTP::Tinyish;
 
