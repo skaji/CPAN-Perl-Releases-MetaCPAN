@@ -39,7 +39,7 @@ sub get {
                     ],
                 },
             },
-            size => 500,
+            size => 1000,
             from => $from,
             sort => [ { date => 'desc' } ],
             fields => [qw( name date author version status maturity download_url )],
