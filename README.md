@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/skaji/CPAN-Perl-Releases-MetaCPAN.svg?branch=master)](https://travis-ci.org/skaji/CPAN-Perl-Releases-MetaCPAN)
+[![Actions Status](https://github.com/skaji/CPAN-Perl-Releases-MetaCPAN/actions/workflows/test.yml/badge.svg)](https://github.com/skaji/CPAN-Perl-Releases-MetaCPAN/actions)
 
 # NAME
 
@@ -22,12 +22,12 @@ CPAN::Perl::Releases::MetaCPAN - Mapping Perl releases on CPAN to the location o
 
 # DESCRIPTION
 
-CPAN::Perl::Releases::MetaCPAN is just like [CPAN::Perl::Releases](https://metacpan.org/pod/CPAN::Perl::Releases),
+CPAN::Perl::Releases::MetaCPAN is just like [CPAN::Perl::Releases](https://metacpan.org/pod/CPAN%3A%3APerl%3A%3AReleases),
 but it gets the release information via MetaCPAN API `https://fastapi.metacpan.org/v1/release`.
 
 # SEE ALSO
 
-[CPAN::Perl::Releases](https://metacpan.org/pod/CPAN::Perl::Releases)
+[CPAN::Perl::Releases](https://metacpan.org/pod/CPAN%3A%3APerl%3A%3AReleases)
 
 [metacpan-api](https://github.com/metacpan/metacpan-api)
 
