@@ -16,7 +16,8 @@ is_deeply $one, {
     'name' => 'perl5.005_62',
     'status' => 'backpan',
     'version' => '5.005_62',
-    'maturity' => 'developer'
+    'maturity' => 'developer',
+    'checksum_sha256' => '67d46acb54ccb215e9646a42a3687695802d4a0e0139902ff3d77b6eaf935229',
 };
 
 my $tarballs = CPAN::Perl::Releases::MetaCPAN::perl_tarballs('5.14.0');
