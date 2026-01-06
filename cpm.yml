@@ -1,7 +1,0 @@
-prereqs:
-  runtime:
-    requires:
-      HTTP::Tiny: { version: '0.055' }
-      HTTP::Tinyish:
-      JSON::PP:
-      perl: { version: '5.008001' }
