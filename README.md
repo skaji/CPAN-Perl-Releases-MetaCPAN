@@ -1,5 +1,3 @@
-[![Actions Status](https://github.com/skaji/CPAN-Perl-Releases-MetaCPAN/actions/workflows/test.yml/badge.svg)](https://github.com/skaji/CPAN-Perl-Releases-MetaCPAN/actions)
-
 # NAME
 
 CPAN::Perl::Releases::MetaCPAN - Mapping Perl releases on CPAN to the location of the tarballs via MetaCPAN API

@@ -1,5 +1,6 @@
-use strict;
+use v5.24;
 use warnings;
+use experimental qw(lexical_subs signatures);
 use Test::More;
 use CPAN::Perl::Releases::MetaCPAN;
 
@@ -7,7 +8,7 @@ my $cpan = CPAN::Perl::Releases::MetaCPAN->new;
 
 my $releases = $cpan->get;
 
-my ($one) = grep { $_->{name} eq "perl5.005_62" }  @$releases;
+my ($one) = grep { $_->{name} eq "perl5.005_62" }  $releases->@*;
 
 is_deeply $one, {
     'author' => 'GSAR',
@@ -22,7 +23,7 @@ is_deeply $one, {
 
 my $tarballs = CPAN::Perl::Releases::MetaCPAN::perl_tarballs('5.14.0');
 is_deeply $tarballs, {
-    'tar.bz2' => 'J/JE/JESSE/perl-5.14.0.tar.bz2'
+    'tar.gz' => 'J/JE/JESSE/perl-5.14.0.tar.gz'
 };
 
 my @versions = CPAN::Perl::Releases::MetaCPAN::perl_versions;
