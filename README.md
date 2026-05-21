@@ -44,9 +44,12 @@ but it gets the release information via MetaCPAN API `https://fastapi.metacpan.o
 
 [metacpan-web](https://github.com/metacpan/metacpan-web)
 
-# AUTHOR
+# ARTIFACT ATTESTATIONS
 
-Shoichi Kaji <skaji@cpan.org>
+GitHub Artifact Attestations are generated for release tarballs uploaded to
+CPAN. If you care about provenance for the uploaded tarballs, see:
+
+[https://github.com/skaji/CPAN-Perl-Releases-MetaCPAN/attestations](https://github.com/skaji/CPAN-Perl-Releases-MetaCPAN/attestations)
 
 # COPYRIGHT AND LICENSE
 
