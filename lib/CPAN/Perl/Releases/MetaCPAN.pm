@@ -43,6 +43,7 @@ sub get ($self) {
             from => $from,
             sort => [ { date => 'desc' } ],
             fields => [qw( name date author version status maturity download_url checksum_sha256 )],
+            _source => JSON::PP::false,
         };
         my $res = $self->{http}->post($uri, {
             content => $self->{json}->encode($query),
