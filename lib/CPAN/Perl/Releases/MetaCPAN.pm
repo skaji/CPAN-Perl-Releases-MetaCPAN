@@ -1,4 +1,4 @@
-package CPAN::Perl::Releases::MetaCPAN v1.0.0;
+package CPAN::Perl::Releases::MetaCPAN v1.0.1;
 use v5.24;
 use warnings;
 use experimental qw(lexical_subs signatures);
